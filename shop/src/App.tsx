@@ -26,8 +26,11 @@ function App() {
         <Container>
         <Navbar.Brand href="#home">Navbar</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link> <Link to="/">Home</Link> </Nav.Link>
-          <Nav.Link><Link to="/detail">Detail</Link></Nav.Link>
+          {/* Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>. warning 해결하기
+          Nav.Link 내부에 Link를 넣었는데 둘다 a태그로 인식되어서 뜨는 메세지
+          Link 태그를 지우고 Nav.Link 태그 안에 as={Link}를 사용하면 해결됨 as={}에 오는 태그 처럼 써달라는 뜻*/}
+          <Nav.Link as={Link} to='/'>Home</Nav.Link>
+          <Nav.Link as={Link} to='/detail'>Detail</Nav.Link>
           <Nav.Link>Pricing</Nav.Link>
         </Nav>
         </Container>
