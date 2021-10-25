@@ -4,6 +4,8 @@ import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import Data from './data.js';
 import './App.css';
 import Detail from './Detail';
+import {useHistory, useParams} from 'react-router-dom';
+import axios from 'axios';
 
 import { Link, Route, Switch } from 'react-router-dom';
 
@@ -19,6 +21,12 @@ type Data = {
 function App() {
 
   let [data, setData] = useState(Data);
+  
+  function addData(res: any) {
+    let copiedData = [...data];
+    copiedData.push(...res);
+    setData(copiedData);
+  }
 
   return (
     <div className="App">
@@ -57,6 +65,19 @@ function App() {
                 })
               }
             </div>
+            <button className="btn btn-primary" onClick={ async()=>{
+              // 로딩중 ui 띄우기 성공 or 실패시 로딩중 없애기
+
+              // axios는 json을 알아서 object로..
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+              .then((res)=>{
+                addData(res.data)
+                // 위처럼 함수 만들어서 하거나 아래처럼 간단하게 가능
+                // setData([...data, ...res.data]);
+                // 더보기 버튼을 2번째 눌렀을때 다른 url로 요청하고 싶으면? => 변수나 state로 누른횟수 저장해두고 조건에따라 요청
+              })
+              
+            }}>더보기</button>
           </div>
         </Route>
         {/* /:id  url parameter 사용 :id 자리엔 뭐가 오든 거기로 이동시킴 id자리에 원하는대로 작명하면됨
@@ -77,9 +98,10 @@ function App() {
 }
 
 function Item(props: Data) :JSX.Element {
+  let history = useHistory();
   return(
     <div className="col-md-4">
-      <img src={`https://codingapple1.github.io/shop/shoes${props.i+1}.jpg`} width="100%" />
+      <img src={`https://codingapple1.github.io/shop/shoes${props.i+1}.jpg`} width="100%" onClick={()=>{history.push('/detail/'+ props.i)} }/>
       <h4>{props.data.title}</h4>
       <p>{props.data.content}</p>
     </div>
